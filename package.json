@@ -1,0 +1,10 @@
+﻿{
+  "name": "med-kepu-site",
+  "version": "1.0.0",
+  "description": "本地医学科普文章编写网站",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {}
+}
