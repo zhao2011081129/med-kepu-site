@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8" />
@@ -7,71 +7,170 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <header>
-    <div>
-      <p class="eyebrow">Medical Content Studio</p>
-      <h1>医学科普文章工作台</h1>
-      <p>面向医院公众号 / 小红书：结构化编写、保存草稿、生成提示词。</p>
-    </div>
-    <div id="userBox"></div>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#hero" aria-label="回到首页">
+      <span class="brand-mark">＋</span>
+      <span>
+        <strong>Med Story Studio</strong>
+        <em>医学科普文章工作台</em>
+      </span>
+    </a>
+    <nav class="nav-links" aria-label="页面导航">
+      <a href="#story">流程</a>
+      <a href="#workspace">工作台</a>
+      <a href="#principles">原则</a>
+    </nav>
+    <div id="userBox" class="user-box"></div>
   </header>
 
   <main>
-    <section id="auth" class="card auth-card">
-      <h2>登录 / 注册</h2>
-      <div class="grid two">
-        <label>用户名<input id="username" placeholder="例如 yuqian" /></label>
-        <label>密码<input id="password" type="password" placeholder="至少 6 位" /></label>
+    <section id="hero" class="hero reveal">
+      <div class="hero-copy">
+        <p class="eyebrow">Medical Content Studio</p>
+        <h1>把复杂医学知识，写成患者愿意读完的故事。</h1>
+        <p class="lead">从疾病主题、受众、诊断依据到就医提醒，沿着清晰叙事线生成医学科普提示词。适合医院公众号、小红书、科室宣教稿。</p>
+        <div class="hero-actions">
+          <a class="button" href="#workspace">开始写稿</a>
+          <a class="button secondary" href="#story">查看叙事流程</a>
+        </div>
       </div>
-      <div class="actions">
-        <button onclick="login()">登录</button>
-        <button class="secondary" onclick="register()">注册</button>
+      <div class="hero-visual" aria-label="医学科普内容流程卡片">
+        <div class="glass-card floating-card card-a">
+          <span>01</span>
+          <strong>是什么</strong>
+          <p>用患者听得懂的话解释疾病本质。</p>
+        </div>
+        <div class="glass-card floating-card card-b">
+          <span>02</span>
+          <strong>有哪些信号</strong>
+          <p>症状、发现情境、何时需要就医。</p>
+        </div>
+        <div class="glass-card floating-card card-c">
+          <span>03</span>
+          <strong>怎么判断与治疗</strong>
+          <p>诊断依据、治疗原则、转归随访。</p>
+        </div>
+        <div class="pulse-orb"></div>
       </div>
-      <p class="hint">本地使用，账号数据保存在 SQLite 数据库中。</p>
     </section>
 
-    <section id="app" class="hidden">
-      <div class="layout">
-        <aside class="card">
-          <div class="side-title">
-            <h2>文章列表</h2>
-            <button onclick="newArticle()">新建</button>
-          </div>
-          <div id="articleList" class="list"></div>
-        </aside>
-
-        <section class="card editor">
-          <h2>文章信息</h2>
-          <input type="hidden" id="articleId" />
-          <div class="grid two">
-            <label>内部标题<input id="title" placeholder="例如：地中海贫血科普稿" /></label>
-            <label>疾病/主题<input id="disease" placeholder="例如：地中海贫血" /></label>
-            <label>发布平台<input id="platform" value="医院公众号 / 小红书" /></label>
-            <label>目标字数<input id="word_count" type="number" value="500" /></label>
-          </div>
-          <label>受众<textarea id="audience">关注自身健康、无医学知识的普通群众</textarea></label>
-
-          <div class="template-note">
-            <strong>默认结构：</strong>是什么 → 临床表现 → 诊断依据 → 治疗原则与转归 → 就医提醒。保持科学严谨，不夸大，不替代诊疗。
-          </div>
-
-          <div class="grid two">
-            <label>2.1 什么是该疾病<textarea id="section1" placeholder="可先写要点，也可留空"></textarea></label>
-            <label>2.2 临床表现<textarea id="section2" placeholder="症状、入院/发现情境"></textarea></label>
-            <label>2.3 诊断依据<textarea id="section3" placeholder="实验室检查、诊断标准"></textarea></label>
-            <label>2.4 治疗原则与转归<textarea id="section4" placeholder="治疗原则、预后、随访"></textarea></label>
-          </div>
-          <label>结尾提醒<textarea id="summary" placeholder="出现哪些身体信号要及时就医"></textarea></label>
-          <label>配图建议<textarea id="image_notes" placeholder="例如：红细胞示意图、症状提示卡片、就医提醒图"></textarea></label>
-
-          <div class="actions sticky-actions">
-            <button onclick="saveArticle()">保存</button>
-            <button class="secondary" onclick="copyPrompt()">生成并复制 AI 提示词</button>
-            <button class="danger" onclick="deleteArticle()">删除</button>
-          </div>
-          <pre id="promptBox" class="prompt hidden"></pre>
-        </section>
+    <section id="story" class="story-section reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Scrollytelling Path</p>
+        <h2>像讲故事一样组织科普，而不是堆医学名词。</h2>
       </div>
+      <div class="story-steps">
+        <article class="story-step">
+          <span class="step-index">1</span>
+          <h3>先建立安全感</h3>
+          <p>用清楚、温和、不制造焦虑的语言解释“这是什么”。</p>
+        </article>
+        <article class="story-step">
+          <span class="step-index">2</span>
+          <h3>再给身体信号</h3>
+          <p>把临床表现转译为日常可识别的症状和场景。</p>
+        </article>
+        <article class="story-step">
+          <span class="step-index">3</span>
+          <h3>最后给行动建议</h3>
+          <p>说明检查、治疗、转归，以及出现哪些情况要及时就医。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="workspace" class="workspace reveal">
+      <section id="auth" class="card auth-card">
+        <div>
+          <p class="eyebrow">Secure Local Drafts</p>
+          <h2>登录 / 注册</h2>
+          <p>账号与文章草稿保存在本地 SQLite 数据库中，适合个人工作台使用。</p>
+        </div>
+        <div class="grid two">
+          <label>用户名<input id="username" placeholder="例如 yuqian" /></label>
+          <label>密码<input id="password" type="password" placeholder="至少 6 位" /></label>
+        </div>
+        <div class="actions">
+          <button onclick="login()">登录</button>
+          <button class="secondary" onclick="register()">注册</button>
+        </div>
+        <p class="hint">建议使用专门的本地密码，不要复用邮箱或 GitHub 密码。</p>
+      </section>
+
+      <section id="app" class="hidden">
+        <div class="layout">
+          <aside class="card article-panel">
+            <div class="side-title">
+              <div>
+                <p class="eyebrow">Draft Library</p>
+                <h2>文章列表</h2>
+              </div>
+              <button onclick="newArticle()">新建</button>
+            </div>
+            <div id="articleList" class="list"></div>
+          </aside>
+
+          <section class="card editor">
+            <div class="editor-head">
+              <div>
+                <p class="eyebrow">Article Blueprint</p>
+                <h2>文章信息</h2>
+              </div>
+              <span class="status-pill">草稿模式</span>
+            </div>
+            <input type="hidden" id="articleId" />
+            <div class="grid two">
+              <label>内部标题<input id="title" placeholder="例如：地中海贫血科普稿" /></label>
+              <label>疾病/主题<input id="disease" placeholder="例如：地中海贫血" /></label>
+              <label>发布平台<input id="platform" value="医院公众号 / 小红书" /></label>
+              <label>目标字数<input id="word_count" type="number" value="500" /></label>
+            </div>
+            <label>受众<textarea id="audience">关注自身健康、无医学知识的普通群众</textarea></label>
+
+            <div class="template-note">
+              <span>默认结构</span>
+              <strong>是什么 → 临床表现 → 诊断依据 → 治疗原则与转归 → 就医提醒</strong>
+              <p>保持科学严谨，不夸大，不替代诊疗；关键段落自然加入配图建议。</p>
+            </div>
+
+            <div class="grid two section-grid">
+              <label><span>2.1 什么是该疾病</span><textarea id="section1" placeholder="可先写要点，也可留空"></textarea></label>
+              <label><span>2.2 临床表现</span><textarea id="section2" placeholder="症状、入院/发现情境"></textarea></label>
+              <label><span>2.3 诊断依据</span><textarea id="section3" placeholder="实验室检查、诊断标准"></textarea></label>
+              <label><span>2.4 治疗原则与转归</span><textarea id="section4" placeholder="治疗原则、预后、随访"></textarea></label>
+            </div>
+            <label>结尾提醒<textarea id="summary" placeholder="出现哪些身体信号要及时就医"></textarea></label>
+            <label>配图建议<textarea id="image_notes" placeholder="例如：红细胞示意图、症状提示卡片、就医提醒图"></textarea></label>
+
+            <div class="actions sticky-actions">
+              <button onclick="saveArticle()">保存</button>
+              <button class="secondary" onclick="copyPrompt()">生成并复制 AI 提示词</button>
+              <button class="danger" onclick="deleteArticle()">删除</button>
+            </div>
+            <pre id="promptBox" class="prompt hidden"></pre>
+          </section>
+        </div>
+      </section>
+    </section>
+
+    <section id="principles" class="principles reveal">
+      <article>
+        <span>Scientific</span>
+        <h3>科学严谨</h3>
+        <p>避免夸大承诺，不替代医生诊疗。</p>
+      </article>
+      <article>
+        <span>Human</span>
+        <h3>患者友好</h3>
+        <p>医学表达转成普通人能理解的行动建议。</p>
+      </article>
+      <article>
+        <span>Reusable</span>
+        <h3>结构复用</h3>
+        <p>沉淀模板，减少重复排版和提示词整理。</p>
+      </article>
     </section>
   </main>
 
