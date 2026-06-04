@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: med-kepu-site
+    runtime: node
+    plan: free
+    buildCommand: ""
+    startCommand: "node server.js"
+    envVars:
+      - key: NODE_VERSION
+        value: 24
+      - key: DATA_DIR
+        value: /tmp/med-kepu-site-data

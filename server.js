@@ -4,10 +4,12 @@ const path = require('node:path');
 const crypto = require('node:crypto');
 const { DatabaseSync } = require('node:sqlite');
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
 const ROOT = __dirname;
 const PUBLIC = path.join(ROOT, 'public');
-const DB_PATH = path.join(ROOT, 'data', 'site.db');
+const DATA_DIR = process.env.DATA_DIR || path.join(ROOT, 'data');
+fs.mkdirSync(DATA_DIR, { recursive: true });
+const DB_PATH = process.env.DB_PATH || path.join(DATA_DIR, 'site.db');
 const db = new DatabaseSync(DB_PATH);
 
 db.exec(`
@@ -183,4 +185,4 @@ const server = http.createServer((req, res) => {
   if (!full.startsWith(PUBLIC) || !fs.existsSync(full)) return send(res, 404, 'Not found', 'text/plain; charset=utf-8');
   send(res, 200, fs.readFileSync(full), mime[path.extname(full)] || 'application/octet-stream');
 });
-server.listen(PORT, () => console.log(`医学科普本地网站已启动：http://localhost:${PORT}`));
+server.listen(PORT, '0.0.0.0', () => console.log(`医学科普网站已启动：http://localhost:${PORT}`));
