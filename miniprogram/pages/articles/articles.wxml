@@ -1,0 +1,24 @@
+<view class="container">
+  <view class="card">
+    <view class="eyebrow">Draft Library</view>
+    <view class="h2">文章列表</view>
+    <view class="muted" wx:if="{{user}}">已登录：{{user.username}}</view>
+    <view class="btn-row">
+      <button class="btn" bindtap="newArticle">新建文章</button>
+      <button class="btn secondary" bindtap="loadArticles">刷新</button>
+      <button class="btn danger" bindtap="logout">退出</button>
+    </view>
+  </view>
+
+  <view class="list" wx:if="{{articles.length}}">
+    <view class="item" wx:for="{{articles}}" wx:key="id" bindtap="openArticle" data-id="{{item.id}}">
+      <view class="item-title">{{item.title}}</view>
+      <view class="muted">{{item.disease}} · {{item.updated_at}}</view>
+      <view class="pill">草稿</view>
+    </view>
+  </view>
+
+  <view class="card" style="margin-top: 24rpx;" wx:else>
+    <view class="muted">暂无文章，点“新建文章”开始。</view>
+  </view>
+</view>

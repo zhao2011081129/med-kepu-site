@@ -1,0 +1,45 @@
+page {
+  background: linear-gradient(180deg, #fbfefd 0%, #f3f8f7 52%, #eef7f4 100%);
+  color: #17302d;
+  font-family: -apple-system, BlinkMacSystemFont, 'Microsoft YaHei', sans-serif;
+}
+.container { padding: 32rpx; }
+.card {
+  background: rgba(255,255,255,.86);
+  border: 1rpx solid rgba(37,92,84,.14);
+  border-radius: 36rpx;
+  padding: 32rpx;
+  box-shadow: 0 20rpx 60rpx rgba(30,91,84,.10);
+}
+.eyebrow { color: #167466; font-size: 22rpx; font-weight: 800; letter-spacing: 3rpx; text-transform: uppercase; margin-bottom: 14rpx; }
+.h1 { font-size: 48rpx; font-weight: 900; line-height: 1.12; letter-spacing: -1rpx; }
+.h2 { font-size: 34rpx; font-weight: 900; }
+.muted { color: #6d807d; line-height: 1.7; }
+.input, .textarea {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 12rpx;
+  margin-bottom: 22rpx;
+  padding: 22rpx 24rpx;
+  border-radius: 24rpx;
+  background: rgba(255,255,255,.92);
+  border: 1rpx solid rgba(37,92,84,.14);
+  color: #17302d;
+}
+.textarea { min-height: 150rpx; }
+.label { font-weight: 800; color: #294641; margin-top: 18rpx; }
+.btn-row { display: flex; gap: 18rpx; flex-wrap: wrap; margin-top: 18rpx; }
+.btn {
+  border-radius: 999rpx;
+  background: linear-gradient(135deg,#239989,#45b7a7);
+  color: #fff;
+  font-weight: 900;
+  padding: 0 34rpx;
+}
+.btn.secondary { background: #ffffff; color: #167466; border: 1rpx solid rgba(37,92,84,.14); }
+.btn.danger { background: #fff2f3; color: #c95b64; border: 1rpx solid rgba(201,91,100,.18); }
+.list { display: grid; gap: 20rpx; margin-top: 24rpx; }
+.item { background: rgba(255,255,255,.88); border: 1rpx solid rgba(37,92,84,.14); border-radius: 28rpx; padding: 26rpx; }
+.item-title { font-size: 30rpx; font-weight: 900; margin-bottom: 8rpx; }
+.pill { display: inline-block; margin-top: 18rpx; padding: 8rpx 18rpx; border-radius: 999rpx; background: #e4f7f2; color: #167466; font-weight: 800; font-size: 22rpx; }
+.prompt { white-space: pre-wrap; background: #162724; color: #eaf8f5; border-radius: 28rpx; padding: 26rpx; line-height: 1.7; margin-top: 24rpx; }

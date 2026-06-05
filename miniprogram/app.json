@@ -1,0 +1,15 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/articles/articles",
+    "pages/editor/editor"
+  ],
+  "window": {
+    "navigationBarTitleText": "医学科普工作台",
+    "navigationBarBackgroundColor": "#f4f8f7",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f4f8f7"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

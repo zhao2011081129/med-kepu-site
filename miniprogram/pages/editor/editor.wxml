@@ -1,0 +1,52 @@
+<view class="container">
+  <view class="card">
+    <view class="eyebrow">Article Blueprint</view>
+    <view class="h2">{{id ? '编辑文章' : '新建文章'}}</view>
+
+    <view class="label">内部标题</view>
+    <input class="input" value="{{form.title}}" data-field="title" bindinput="onInput" placeholder="例如：地中海贫血科普稿" />
+
+    <view class="label">疾病/主题</view>
+    <input class="input" value="{{form.disease}}" data-field="disease" bindinput="onInput" placeholder="例如：地中海贫血" />
+
+    <view class="label">发布平台</view>
+    <input class="input" value="{{form.platform}}" data-field="platform" bindinput="onInput" />
+
+    <view class="label">目标字数</view>
+    <input class="input" type="number" value="{{form.word_count}}" data-field="word_count" bindinput="onInput" />
+
+    <view class="label">受众</view>
+    <textarea class="textarea" value="{{form.audience}}" data-field="audience" bindinput="onInput" />
+  </view>
+
+  <view class="card" style="margin-top: 24rpx;">
+    <view class="eyebrow">默认结构</view>
+    <view class="muted">是什么 → 临床表现 → 诊断依据 → 治疗原则与转归 → 就医提醒</view>
+
+    <view class="label">2.1 什么是该疾病</view>
+    <textarea class="textarea" value="{{form.section1}}" data-field="section1" bindinput="onInput" placeholder="可先写要点，也可留空" />
+
+    <view class="label">2.2 临床表现</view>
+    <textarea class="textarea" value="{{form.section2}}" data-field="section2" bindinput="onInput" placeholder="症状、入院/发现情境" />
+
+    <view class="label">2.3 诊断依据</view>
+    <textarea class="textarea" value="{{form.section3}}" data-field="section3" bindinput="onInput" placeholder="实验室检查、诊断标准" />
+
+    <view class="label">2.4 治疗原则与转归</view>
+    <textarea class="textarea" value="{{form.section4}}" data-field="section4" bindinput="onInput" placeholder="治疗原则、预后、随访" />
+
+    <view class="label">结尾提醒</view>
+    <textarea class="textarea" value="{{form.summary}}" data-field="summary" bindinput="onInput" placeholder="出现哪些身体信号要及时就医" />
+
+    <view class="label">配图建议</view>
+    <textarea class="textarea" value="{{form.image_notes}}" data-field="image_notes" bindinput="onInput" placeholder="例如：红细胞示意图、症状提示卡片" />
+
+    <view class="btn-row">
+      <button class="btn" bindtap="saveArticle">保存</button>
+      <button class="btn secondary" bindtap="copyPrompt">生成并复制提示词</button>
+      <button class="btn danger" wx:if="{{id}}" bindtap="deleteArticle">删除</button>
+    </view>
+  </view>
+
+  <view class="prompt" wx:if="{{prompt}}">{{prompt}}</view>
+</view>

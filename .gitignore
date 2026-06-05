@@ -6,4 +6,5 @@ Thumbs.db
 
 data/*.db
 data/*.db-*
+tmp-data/
 !data/.gitkeep
