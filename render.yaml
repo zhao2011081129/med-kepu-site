@@ -2,15 +2,11 @@ services:
   - type: web
     name: med-kepu-site
     runtime: node
-    plan: starter
+    plan: free
     buildCommand: ""
     startCommand: "node server.js"
-    disk:
-      name: med-kepu-site-data
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: NODE_VERSION
         value: 24
       - key: DATA_DIR
-        value: /var/data
+        value: /tmp/med-kepu-site-data
