@@ -46,25 +46,70 @@ CREATE TABLE IF NOT EXISTS templates (
 );
 `);
 
-const defaultTemplate = `你现在是一名资深医学科普类编辑。
-目标：写一篇关于「{disease}」的医学科普文章。
-发布平台：{platform}。
-受众：{audience}。
-要求：
-1. 制定一个吸引人的标题。
-2. 内容包含：
-   2.1 什么是{disease}
-   2.2 临床表现：常见症状、什么情况下入院或被发现
-   2.3 实验室/医学诊断依据
-   2.4 治疗原则及疾病转归
-3. 结尾总结：重点提醒出现哪些身体信号要及时就医。
-4. 通篇科学、严谨，避免夸大；语气像医生面对面向患者解释。
-5. 关键地方提示配图建议。
-6. 不替代医生诊疗，不确定内容需核实。
-字数：约{word_count}字。
-输出格式：标题、正文小标题、结尾提醒。`;
+const defaultTemplate = `你现在是一名资深医院检验科健康科普编辑，同时熟悉医院公众号和小红书平台内容表达。
 
-db.prepare('INSERT OR IGNORE INTO templates(name, content) VALUES (?, ?)').run('医学科普文章模板', defaultTemplate);
+目标：围绕「{disease}」生成一套适合医院检验科使用的双平台健康科普内容。
+发布平台：{platform}
+面向人群：{audience}
+目标字数：公众号正文约 {word_count} 字，小红书笔记控制在 600-900 字。
+
+已知输入：
+1. 内容标题 / 内部主题：{title}
+2. 检验项目 / 科普主题：{disease}
+3. 项目用途 / 为什么要查：
+{section1}
+4. 检查前注意事项：
+{section2}
+5. 报告指标 / 常见异常：
+{section3}
+6. 常见误区 / 风险边界：
+{section4}
+7. 结尾提醒 / 行动建议：
+{summary}
+8. 配图建议 / 科室补充要点：
+{image_notes}
+
+请严格输出以下内容：
+
+一、公众号科普长文
+- 给出 3 个克制、专业、不恐吓的标题备选。
+- 正文结构建议：
+  1. 开头：用患者常见问题引入，降低焦虑。
+  2. 这个检验项目主要看什么。
+  3. 哪些场景下医生可能会开这个检查。
+  4. 检查前需要注意什么。
+  5. 报告中常见指标或异常应该如何理性理解。
+  6. 常见误区澄清。
+  7. 什么情况下建议咨询医生或复查。
+  8. 结尾免责声明。
+- 语言要求：患者能看懂，避免专业术语堆砌；必要术语要解释。
+
+二、小红书健康科普笔记
+- 给出 5 个小红书标题备选，要求生活化但不标题党。
+- 输出笔记正文，结构包括：开头钩子、3-5 个知识点、误区提醒、结尾行动建议。
+- 给出 6-10 个标签建议。
+- 适合做成图文卡片的分镜建议。
+
+三、合规与安全风险检查
+请用表格列出：
+- 可能涉及的风险表达
+- 为什么有风险
+- 建议替代表达
+重点检查：直接诊断、夸大检测作用、诱导过度检查、恐吓标题、具体治疗/用药建议、个人报告解读、患者隐私、平台审核敏感词。
+
+四、发布前审核清单
+列出医院公众号编辑或检验科审核时需要确认的事项。
+
+必须遵守：
+1. 不提供个人检验报告诊断。
+2. 不把指标异常直接等同于疾病确诊。
+3. 不提供治疗方案或用药建议。
+4. 不夸大检验项目作用，不使用“精准诊断、一次查清、早筛所有疾病、必须做、不做就晚了”等表达。
+5. 不制造焦虑，不诱导过度检查。
+6. 所有内容都要提醒：检验结果需结合症状、病史、体征和医生判断，发布前建议由检验科专业人员或医院审核。
+7. 不承诺公众号或小红书过审、涨粉、阅读量或咨询转化。`;
+
+db.prepare('INSERT OR IGNORE INTO templates(name, content) VALUES (?, ?)').run('检验科双平台科普模板', defaultTemplate);
 
 const sessions = new Map();
 const mime = { '.html':'text/html; charset=utf-8', '.css':'text/css; charset=utf-8', '.js':'application/javascript; charset=utf-8', '.json':'application/json; charset=utf-8' };
@@ -105,11 +150,20 @@ function requireLogin(req, res) {
   return user;
 }
 function generatePrompt(article) {
-  const tpl = db.prepare('SELECT content FROM templates WHERE name=?').get('医学科普文章模板').content;
-  return tpl.replaceAll('{disease}', article.disease || '')
-    .replaceAll('{platform}', article.platform || '医院公众号/小红书')
-    .replaceAll('{audience}', article.audience || '关注自身健康、无医学知识的普通群众')
-    .replaceAll('{word_count}', String(article.word_count || 500));
+  const row = db.prepare('SELECT content FROM templates WHERE name=?').get('检验科双平台科普模板');
+  const tpl = row ? row.content : defaultTemplate;
+  const value = key => String(article[key] || '');
+  return tpl.replaceAll('{title}', value('title'))
+    .replaceAll('{disease}', value('disease'))
+    .replaceAll('{platform}', article.platform || '医院公众号 + 小红书')
+    .replaceAll('{audience}', article.audience || '关注医院公众号的患者、体检人群、普通健康关注者')
+    .replaceAll('{section1}', value('section1') || '暂无，请基于该检验项目的常见用途进行谨慎科普')
+    .replaceAll('{section2}', value('section2') || '暂无，请提示用户以医院检查单、开单医生或检验科窗口要求为准')
+    .replaceAll('{section3}', value('section3') || '暂无，请只做通俗解释，不做个人报告诊断')
+    .replaceAll('{section4}', value('section4') || '暂无，请主动补充常见误区和风险边界')
+    .replaceAll('{summary}', value('summary') || '报告异常需结合症状、病史和医生判断，必要时咨询医生或复查')
+    .replaceAll('{image_notes}', value('image_notes') || '请给出适合公众号和小红书卡片的配图建议')
+    .replaceAll('{word_count}', String(article.word_count || 1800));
 }
 
 async function api(req, res) {
@@ -145,7 +199,7 @@ async function api(req, res) {
   if (req.method === 'POST' && url.pathname === '/api/articles') {
     const user = requireLogin(req, res); if (!user) return;
     const a = await readBody(req);
-    if (!a.title || !a.disease) return send(res, 400, { error: '标题和疾病名称必填' });
+    if (!a.title || !a.disease) return send(res, 400, { error: '标题和检验项目 / 科普主题必填' });
     const clean = v => v == null ? '' : String(v);
     const r = db.prepare(`INSERT INTO articles(user_id,title,disease,audience,platform,section1,section2,section3,section4,summary,image_notes,word_count,status)
       VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`).run(user.id, clean(a.title), clean(a.disease), clean(a.audience), clean(a.platform), clean(a.section1), clean(a.section2), clean(a.section3), clean(a.section4), clean(a.summary), clean(a.image_notes), Number(a.word_count)||500, clean(a.status || 'draft'));
@@ -185,4 +239,4 @@ const server = http.createServer((req, res) => {
   if (!full.startsWith(PUBLIC) || !fs.existsSync(full)) return send(res, 404, 'Not found', 'text/plain; charset=utf-8');
   send(res, 200, fs.readFileSync(full), mime[path.extname(full)] || 'application/octet-stream');
 });
-server.listen(PORT, '0.0.0.0', () => console.log(`医学科普网站已启动：http://localhost:${PORT}`));
+server.listen(PORT, '0.0.0.0', () => console.log(`检验科普内容工作台已启动：http://localhost:${PORT}`));
