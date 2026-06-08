@@ -1,200 +1,602 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>检验科普内容工作台</title>
-  <meta name="description" content="面向医院检验科和医疗公众号编辑的公众号、小红书双平台健康科普生成工具。" />
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>医护专用·医院公众号疾病科普AI图文生成工具</title>
+  <meta name="description" content="专为医院公众号运营打造的标准化合规疾病科普AI图文生成工具。输入疾病主题、字数、格式和图文设置，一键生成可直接发布的公众号科普文章。" />
+  <style>
+    :root {
+      --bg: #f6fbff;
+      --card: #ffffff;
+      --ink: #172033;
+      --muted: #627083;
+      --brand: #1d8f87;
+      --brand-dark: #126962;
+      --brand-soft: #e6f7f5;
+      --blue: #3468d8;
+      --blue-soft: #edf3ff;
+      --orange: #ff9f43;
+      --red-soft: #fff2f0;
+      --line: #dce8ef;
+      --shadow: 0 18px 50px rgba(28, 80, 110, .12);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(29, 143, 135, .16), transparent 34%),
+        radial-gradient(circle at 85% 8%, rgba(52, 104, 216, .14), transparent 32%),
+        var(--bg);
+      line-height: 1.7;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(18px);
+      background: rgba(246, 251, 255, .78);
+      border-bottom: 1px solid rgba(220, 232, 239, .72);
+    }
+    .nav-inner {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .logo { display: flex; align-items: center; gap: 12px; font-weight: 800; letter-spacing: -.02em; }
+    .logo-mark {
+      width: 38px; height: 38px; border-radius: 13px;
+      display: grid; place-items: center;
+      color: white; font-weight: 900;
+      background: linear-gradient(135deg, var(--brand), var(--blue));
+      box-shadow: 0 10px 26px rgba(29, 143, 135, .28);
+    }
+    .nav-links { display: flex; align-items: center; gap: 24px; color: var(--muted); font-size: 14px; }
+    .nav-links a:hover { color: var(--brand-dark); }
+
+    .btn {
+      border: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s ease;
+      white-space: nowrap;
+    }
+    .btn-primary { color: white; background: linear-gradient(135deg, var(--brand), var(--brand-dark)); box-shadow: 0 12px 28px rgba(29, 143, 135, .26); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 16px 34px rgba(29, 143, 135, .32); }
+    .btn-secondary { color: var(--brand-dark); background: var(--brand-soft); }
+    .btn-secondary:hover { background: #d8f1ee; }
+    .btn-ghost { color: var(--ink); background: white; border: 1px solid var(--line); }
+
+    .hero { padding: 78px 0 54px; }
+    .hero-grid { display: grid; grid-template-columns: 1.04fr .96fr; gap: 38px; align-items: center; }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 14px;
+      border: 1px solid rgba(29,143,135,.22);
+      background: rgba(230,247,245,.72);
+      color: var(--brand-dark);
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(38px, 5.2vw, 68px);
+      line-height: 1.08;
+      letter-spacing: -.055em;
+    }
+    .hero h1 span { color: var(--brand-dark); }
+    .hero-sub {
+      margin: 24px 0 0;
+      max-width: 650px;
+      font-size: 19px;
+      color: var(--muted);
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+    .hero-proof { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+    .pill { padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255,255,255,.7); color: var(--muted); font-size: 13px; }
+
+    .app-card {
+      background: rgba(255,255,255,.88);
+      border: 1px solid rgba(220,232,239,.9);
+      box-shadow: var(--shadow);
+      border-radius: 30px;
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .app-card::before {
+      content: "";
+      position: absolute; inset: 0 0 auto 0; height: 7px;
+      background: linear-gradient(90deg, var(--brand), var(--blue), var(--orange));
+    }
+    .window-bar { display: flex; gap: 8px; padding: 6px 0 18px; }
+    .dot { width: 11px; height: 11px; border-radius: 50%; background: #ff6b6b; }
+    .dot:nth-child(2) { background: #ffd166; }
+    .dot:nth-child(3) { background: #06d6a0; }
+    .mock-form { display: grid; gap: 14px; }
+    label { display: block; color: var(--muted); font-size: 13px; margin-bottom: 6px; font-weight: 700; }
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      padding: 12px 14px;
+      font: inherit;
+      background: #fff;
+      color: var(--ink);
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus { border-color: rgba(29,143,135,.6); box-shadow: 0 0 0 4px rgba(29,143,135,.09); }
+    .two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .switch-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 14px; border-radius: 15px; background: var(--blue-soft); }
+    .switch-row strong { display: block; font-size: 14px; }
+    .switch-row span { color: var(--muted); font-size: 12px; }
+    .switch { width: 48px; height: 28px; appearance: none; background: var(--brand); border-radius: 999px; position: relative; cursor: pointer; flex: none; }
+    .switch::after { content: ""; position: absolute; width: 22px; height: 22px; border-radius: 50%; background: white; top: 3px; right: 3px; transition: .2s; }
+    .switch:not(:checked) { background: #bac7d2; }
+    .switch:not(:checked)::after { right: 23px; }
+
+    .section { padding: 72px 0; }
+    .section-head { max-width: 780px; margin-bottom: 34px; }
+    .tag { color: var(--brand-dark); font-weight: 800; font-size: 14px; margin-bottom: 8px; }
+    h2 { margin: 0; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.18; letter-spacing: -.035em; }
+    .lead { margin: 14px 0 0; color: var(--muted); font-size: 17px; }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .card {
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(220,232,239,.92);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: 0 12px 36px rgba(28,80,110,.07);
+    }
+    .icon {
+      width: 44px; height: 44px; border-radius: 16px;
+      display: grid; place-items: center;
+      background: var(--brand-soft);
+      color: var(--brand-dark);
+      font-size: 22px;
+      margin-bottom: 14px;
+    }
+    .card h3 { margin: 0 0 8px; font-size: 20px; }
+    .card p { margin: 0; color: var(--muted); }
+
+    .module-list { counter-reset: module; display: grid; gap: 14px; }
+    .module {
+      counter-increment: module;
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 16px;
+      align-items: start;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 18px;
+    }
+    .module::before {
+      content: counter(module);
+      width: 44px; height: 44px; border-radius: 15px;
+      display: grid; place-items: center;
+      background: linear-gradient(135deg, var(--brand), var(--blue));
+      color: white; font-weight: 900;
+    }
+    .module h3 { margin: 0 0 4px; font-size: 18px; }
+    .module p { margin: 0; color: var(--muted); }
+
+    .generator {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    .panel-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .panel-title h3 { margin: 0; }
+    .result {
+      min-height: 620px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 26px;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.5);
+      overflow: auto;
+    }
+    .article h2 { font-size: 28px; margin: 0 0 12px; }
+    .article h3 { margin: 24px 0 8px; font-size: 19px; color: var(--brand-dark); }
+    .article p, .article li { color: #344154; }
+    .image-tip { margin: 12px 0; padding: 12px 14px; border-radius: 16px; background: var(--blue-soft); color: #284f9f; font-size: 14px; }
+    .disclaimer { margin-top: 20px; padding: 14px; background: var(--red-soft); border: 1px solid #ffd6d1; border-radius: 16px; color: #8a3a31; font-size: 14px; }
+
+    .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    .flow-step { position: relative; background: white; border: 1px solid var(--line); border-radius: 20px; padding: 18px; min-height: 128px; }
+    .flow-step b { display: block; color: var(--brand-dark); margin-bottom: 6px; }
+    .flow-step p { margin: 0; color: var(--muted); font-size: 14px; }
+
+    .pricing { align-items: stretch; }
+    .price-card { position: relative; }
+    .price-card.featured { border-color: rgba(29,143,135,.38); box-shadow: var(--shadow); transform: translateY(-8px); }
+    .badge { display: inline-flex; padding: 6px 10px; background: var(--brand-soft); color: var(--brand-dark); border-radius: 999px; font-size: 12px; font-weight: 800; }
+    .price { font-size: 34px; font-weight: 900; margin: 14px 0 6px; letter-spacing: -.03em; }
+    .price small { font-size: 14px; color: var(--muted); font-weight: 600; }
+    .features { list-style: none; padding: 0; margin: 18px 0 0; display: grid; gap: 10px; color: var(--muted); }
+    .features li::before { content: "✓"; color: var(--brand); font-weight: 900; margin-right: 8px; }
+
+    .risk { background: #fff; border: 1px solid var(--line); border-radius: 24px; overflow: hidden; }
+    .risk-row { display: grid; grid-template-columns: 180px 1fr 1.2fr; gap: 0; border-bottom: 1px solid var(--line); }
+    .risk-row:last-child { border-bottom: 0; }
+    .risk-row > div { padding: 18px; }
+    .risk-row > div:first-child { background: var(--brand-soft); font-weight: 800; color: var(--brand-dark); }
+    .risk-row p { margin: 0; color: var(--muted); }
+
+    .cta {
+      margin: 70px 0;
+      padding: 48px;
+      border-radius: 34px;
+      color: white;
+      background:
+        linear-gradient(135deg, rgba(18,105,98,.96), rgba(52,104,216,.9)),
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.25), transparent 36%);
+      box-shadow: var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .cta h2 { color: white; }
+    .cta p { color: rgba(255,255,255,.82); margin: 10px 0 0; max-width: 680px; }
+    .cta .btn { background: white; color: var(--brand-dark); }
+
+    footer { padding: 38px 0 56px; color: var(--muted); border-top: 1px solid var(--line); }
+    .footer-grid { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+    .mini { font-size: 13px; color: var(--muted); }
+
+    @media (max-width: 980px) {
+      .hero-grid, .generator { grid-template-columns: 1fr; }
+      .grid-3, .grid-2, .flow { grid-template-columns: 1fr 1fr; }
+      .risk-row { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .cta { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 640px) {
+      .container { width: min(100% - 28px, 1180px); }
+      .hero { padding-top: 46px; }
+      .grid-3, .grid-2, .flow, .two { grid-template-columns: 1fr; }
+      .cta { padding: 30px; }
+      .section { padding: 50px 0; }
+    }
+  </style>
 </head>
 <body>
-  <div class="ambient ambient-one"></div>
-  <div class="ambient ambient-two"></div>
-
-  <header class="topbar">
-    <a class="brand" href="#hero" aria-label="回到首页">
-      <span class="brand-mark">检</span>
-      <span>
-        <strong>Lab Content Studio</strong>
-        <em>检验科普内容工作台</em>
-      </span>
-    </a>
-    <nav class="nav-links" aria-label="页面导航">
-      <a href="#story">流程</a>
-      <a href="#workspace">工作台</a>
-      <a href="#principles">原则</a>
-    </nav>
-    <div id="userBox" class="user-box"></div>
-  </header>
-
-  <main>
-    <section id="hero" class="hero reveal">
-      <div class="hero-copy">
-        <p class="eyebrow">Hospital Lab Content Tool</p>
-        <h1>把检验项目，写成患者看得懂的公众号和小红书科普。</h1>
-        <p class="lead">面向医院检验科、宣传科和医疗公众号编辑，围绕血常规、肝功能、肿瘤标志物、检查前注意事项、报告常见误区等主题，生成公众号长文与小红书笔记提示词。</p>
-        <div class="hero-actions">
-          <a class="button" href="#workspace">开始生成科普内容</a>
-          <a class="button secondary" href="#story">查看内容流程</a>
-        </div>
-        <div class="hero-proof">
-          <span>公众号长文</span>
-          <span>小红书笔记</span>
-          <span>合规风险提醒</span>
-        </div>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a href="#top" class="logo" aria-label="医护科普AI首页">
+        <span class="logo-mark">医</span>
+        <span>医护科普AI</span>
+      </a>
+      <div class="nav-links">
+        <a href="#pain">解决痛点</a>
+        <a href="#modules">内容模块</a>
+        <a href="#demo">生成演示</a>
+        <a href="#compliance">合规保障</a>
+        <a href="#pricing">开通方案</a>
       </div>
-      <div class="hero-visual" aria-label="检验科普内容流程卡片">
-        <div class="glass-card floating-card card-a">
-          <span>01</span>
-          <strong>讲清项目</strong>
-          <p>解释检查目的、适用人群和普通人最关心的问题。</p>
-        </div>
-        <div class="glass-card floating-card card-b">
-          <span>02</span>
-          <strong>适配平台</strong>
-          <p>公众号偏完整，小红书偏场景化、短句化和卡片化。</p>
-        </div>
-        <div class="glass-card floating-card card-c">
-          <span>03</span>
-          <strong>守住边界</strong>
-          <p>异常不等于确诊，内容不替代医生诊断和报告解读。</p>
-        </div>
-        <div class="pulse-orb"></div>
-      </div>
-    </section>
+      <a class="btn btn-primary" href="#demo">免费试生成</a>
+    </div>
+  </nav>
 
-    <section id="story" class="story-section reveal">
-      <div class="section-heading">
-        <p class="eyebrow">Content Workflow</p>
-        <h2>检验科普要先降低焦虑，再帮助患者理解检查价值。</h2>
-      </div>
-      <div class="story-steps">
-        <article class="story-step">
-          <span class="step-index">1</span>
-          <h3>先回答为什么查</h3>
-          <p>说明检验项目的用途、适用场景，以及检查前要注意什么。</p>
-        </article>
-        <article class="story-step">
-          <span class="step-index">2</span>
-          <h3>再解释怎么看</h3>
-          <p>用通俗语言解释常见指标和误区，避免把异常直接等同于疾病。</p>
-        </article>
-        <article class="story-step">
-          <span class="step-index">3</span>
-          <h3>最后提示怎么做</h3>
-          <p>引导复查、咨询医生或结合临床判断，不做诊断和治疗承诺。</p>
-        </article>
-      </div>
-    </section>
-
-    <section id="workspace" class="workspace reveal">
-      <section id="auth" class="card auth-card">
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-grid">
         <div>
-          <p class="eyebrow">Secure Drafts</p>
-          <h2>登录 / 注册</h2>
-          <p>账号与内容草稿保存在 SQLite 数据库中，适合医院检验科或医疗公众号编辑内部使用。</p>
+          <div class="eyebrow">🏥 公立医院公众号运营专用 · 标准化疾病科普图文</div>
+          <h1>输入疾病主题，<span>10秒生成</span>可发布的医院公众号科普文章</h1>
+          <p class="hero-sub">面向医护人员、宣传科和基层卫生院运营人员。支持设置主题词、字数、输出格式和图文结合，一键生成专业严谨、通俗易懂、结构完整、合规安全的疾病科普内容。</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#demo">立即体验生成器</a>
+            <a class="btn btn-secondary" href="#modules">查看五大医学结构</a>
+          </div>
+          <div class="hero-proof">
+            <span class="pill">五大固定医学模块</span>
+            <span class="pill">公众号图文排版</span>
+            <span class="pill">无营销话术</span>
+            <span class="pill">固定免责声明</span>
+            <span class="pill">支持人工二次微调</span>
+          </div>
         </div>
-        <div class="grid two">
-          <label>用户名<input id="username" autocomplete="username" placeholder="例如 lab_editor" /></label>
-          <label>密码<input id="password" type="password" autocomplete="current-password" placeholder="至少 6 位" /></label>
-        </div>
-        <div class="actions">
-          <button onclick="login()">登录</button>
-          <button class="secondary" onclick="register()">注册</button>
-        </div>
-        <p class="hint">建议使用专门的本地密码，不要复用邮箱、微信或 GitHub 密码。</p>
-      </section>
 
-      <section id="app" class="hidden">
-        <div class="layout">
-          <aside class="card article-panel">
-            <div class="side-title">
+        <div class="app-card" aria-label="产品界面预览">
+          <div class="window-bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+          <div class="panel-title">
+            <h3>疾病科普图文生成</h3>
+            <span class="badge">公众号专用</span>
+          </div>
+          <div class="mock-form">
+            <div>
+              <label>疾病主题词</label>
+              <input value="TTP（血栓性血小板减少性紫癜）" readonly />
+            </div>
+            <div class="two">
               <div>
-                <p class="eyebrow">Draft Library</p>
-                <h2>内容草稿</h2>
+                <label>目标字数</label>
+                <input value="1200字" readonly />
               </div>
-              <button onclick="newArticle()">新建</button>
-            </div>
-            <div class="quick-templates" aria-label="快速示例">
-              <button class="chip" onclick="applyExample('blood')">血常规</button>
-              <button class="chip" onclick="applyExample('tumor')">肿瘤标志物</button>
-              <button class="chip" onclick="applyExample('fasting')">抽血空腹</button>
-            </div>
-            <div id="articleList" class="list"></div>
-          </aside>
-
-          <section class="card editor">
-            <div class="editor-head">
               <div>
-                <p class="eyebrow">Lab Content Blueprint</p>
-                <h2>检验科普内容输入</h2>
+                <label>输出格式</label>
+                <input value="公众号图文格式" readonly />
               </div>
-              <span class="status-pill">公众号 + 小红书</span>
             </div>
-            <input type="hidden" id="articleId" />
-            <div class="grid two">
-              <label>内容标题<input id="title" placeholder="例如：血常规报告里的箭头，到底代表什么？" /></label>
-              <label>检验项目 / 科普主题<input id="disease" placeholder="例如：血常规 / 肿瘤标志物 / 抽血前空腹" /></label>
-              <label>发布平台<input id="platform" value="医院公众号 + 小红书" /></label>
-              <label>目标字数<input id="word_count" type="number" min="800" max="5000" value="1800" /></label>
+            <div class="switch-row">
+              <div><strong>图文结合</strong><span>自动匹配每个板块配图建议</span></div>
+              <input class="switch" type="checkbox" checked aria-label="图文结合" />
             </div>
-            <label>面向人群 / 使用场景<textarea id="audience" placeholder="例如：关注医院公众号的患者、体检人群、普通健康关注者；希望看懂检查目的和注意事项。"></textarea></label>
-
-            <div class="template-note">
-              <span>默认输出</span>
-              <strong>公众号长文 + 小红书笔记 + 标题建议 + 配图建议 + 合规风险提醒</strong>
-              <p>重点说明检验项目用途、检查前注意事项、报告常见误区和就医提醒；不直接诊断、不解读个人报告、不夸大检测作用。</p>
-            </div>
-
-            <div class="grid two section-grid">
-              <label><span>1. 项目用途 / 为什么要查</span><textarea id="section1" placeholder="这个检验项目主要看什么？常用于哪些场景？适合哪些人了解？"></textarea></label>
-              <label><span>2. 检查前注意事项</span><textarea id="section2" placeholder="是否需要空腹？能不能喝水？样本怎么留？采血后怎么按压？"></textarea></label>
-              <label><span>3. 报告指标 / 常见异常</span><textarea id="section3" placeholder="常见指标、↑↓箭头、阳性/阴性、加号等怎么通俗解释？"></textarea></label>
-              <label><span>4. 常见误区 / 风险边界</span><textarea id="section4" placeholder="例如：异常不等于确诊、肿瘤标志物升高不一定是癌、不能自行用药。"></textarea></label>
-            </div>
-            <label>结尾提醒 / 行动建议<textarea id="summary" placeholder="例如：报告异常建议结合症状、病史和医生判断；必要时复查或到对应专科就诊。"></textarea></label>
-            <label>配图建议 / 科室补充要点<textarea id="image_notes" placeholder="例如：检验流程图、报告箭头示意图、抽血前注意事项卡片、检验科窗口照片。"></textarea></label>
-
-            <div class="quality-card">
-              <strong>发布前检查</strong>
-              <ul>
-                <li>是否避免把检验异常直接写成疾病诊断？</li>
-                <li>是否避免“精准诊断、一定、必查、早筛所有疾病”等夸大表达？</li>
-                <li>是否提醒发布前由检验科专业人员或医院审核？</li>
-              </ul>
-            </div>
-
-            <div class="actions sticky-actions">
-              <button onclick="saveArticle()">保存草稿</button>
-              <button class="secondary" onclick="copyPrompt()">生成并复制双平台提示词</button>
-              <button class="ghost" onclick="downloadPrompt()">下载提示词</button>
-              <button class="danger" onclick="deleteArticle()">删除</button>
-            </div>
-            <pre id="promptBox" class="prompt hidden"></pre>
-          </section>
+            <button class="btn btn-primary" type="button">生成完整科普文章 →</button>
+          </div>
         </div>
-      </section>
+      </div>
     </section>
 
-    <section id="principles" class="principles reveal">
-      <article>
-        <span>Readable</span>
-        <h3>患者看得懂</h3>
-        <p>把检验项目、指标和注意事项转成普通人能理解的语言。</p>
-      </article>
-      <article>
-        <span>Dual Platform</span>
-        <h3>双平台适配</h3>
-        <p>公众号负责完整解释，小红书负责场景化、卡片化、轻科普表达。</p>
-      </article>
-      <article>
-        <span>Safe Boundary</span>
-        <h3>风险可控</h3>
-        <p>不替代诊断，不解读个人报告，不承诺检测结果和平台效果。</p>
-      </article>
+    <section id="pain" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="tag">为什么医院公众号需要它</div>
+          <h2>不是泛写作工具，而是医护公众号每日科普的减负工具</h2>
+          <p class="lead">医院科普需要专业、通俗、合规、可持续更新。普通AI写作容易结构散、话术泛、医学表述不稳；人工撰写又耗时耗力。</p>
+        </div>
+        <div class="grid-3">
+          <div class="card"><div class="icon">⏱️</div><h3>减少每日撰稿压力</h3><p>医护人员临床工作繁忙，工具将重复性的疾病科普撰写流程标准化，快速生成初稿。</p></div>
+          <div class="card"><div class="icon">🧬</div><h3>专业内容通俗表达</h3><p>把定义、发病率、临床表现、诊断标准和治疗原则，转化为普通大众看得懂的语言。</p></div>
+          <div class="card"><div class="icon">🛡️</div><h3>降低合规表达风险</h3><p>避免绝对化医疗词汇、个性化诊疗建议和商业营销表述，保持医院官方公益科普调性。</p></div>
+          <div class="card"><div class="icon">🖼️</div><h3>图文适配公众号</h3><p>按文章板块给出高清科普配图描述，帮助运营人员摆脱纯文字枯燥和配图困难。</p></div>
+          <div class="card"><div class="icon">📐</div><h3>结构统一可复制</h3><p>每篇文章都按固定医学模块输出，便于科室长期保持统一栏目风格和专业形象。</p></div>
+          <div class="card"><div class="icon">📝</div><h3>支持二次微调发布</h3><p>生成内容可直接复制、编辑和增减段落，适配不同科室、不同医院公众号风格。</p></div>
+        </div>
+      </div>
     </section>
+
+    <section id="modules" class="section">
+      <div class="container grid-2" style="align-items:center;">
+        <div>
+          <div class="tag">固定输出结构</div>
+          <h2>所有科普文章强制包含五大医学模块</h2>
+          <p class="lead">围绕用户要求的TTP文章结构设计，也可扩展至高血压、糖尿病、贫血、哮喘等常见疾病主题。</p>
+        </div>
+        <div class="module-list">
+          <div class="module"><div><h3>疾病基础认知</h3><p>标准定义、临床整体发病率、了解并重视该疾病的重要性。</p></div></div>
+          <div class="module"><div><h3>疾病临床表现</h3><p>典型症状、非典型症状、高发人群特点和不同阶段身体表现。</p></div></div>
+          <div class="module"><div><h3>实验室诊断标准</h3><p>常用检查项目、核心诊断指标、筛查标准和专业数据通俗解读。</p></div></div>
+          <div class="module"><div><h3>治疗原则及疾病转归</h3><p>规范化治疗原则、基础治疗方向、预后情况和康复影响因素。</p></div></div>
+          <div class="module"><div><h3>总结与就医警示</h3><p>明确哪些身体信号需要及时就医，强化科普落地价值。</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="demo" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="tag">在线生成演示</div>
+          <h2>四个参数，生成一篇公众号科普初稿</h2>
+          <p class="lead">以下为前端演示版。正式商业化版本可接入AI模型、医学知识库、医院模板和账号权限系统。</p>
+        </div>
+        <div class="generator">
+          <div class="card">
+            <div class="panel-title"><h3>生成设置</h3><span class="badge">Demo</span></div>
+            <form id="generatorForm" class="mock-form">
+              <div>
+                <label for="topic">主题词</label>
+                <input id="topic" name="topic" value="TTP" placeholder="如：TTP、高血压、糖尿病" />
+              </div>
+              <div>
+                <label for="words">目标字数</label>
+                <select id="words" name="words">
+                  <option>800字</option>
+                  <option selected>1200字</option>
+                  <option>1500字</option>
+                  <option>2000字</option>
+                </select>
+              </div>
+              <div>
+                <label for="format">输出格式</label>
+                <select id="format" name="format">
+                  <option selected>公众号图文格式</option>
+                  <option>纯文档格式</option>
+                  <option>精简科普格式</option>
+                </select>
+              </div>
+              <div class="switch-row">
+                <div><strong>图文结合</strong><span>为每个核心板块生成配图描述</span></div>
+                <input id="withImage" class="switch" type="checkbox" checked />
+              </div>
+              <button class="btn btn-primary" type="submit">生成文章</button>
+              <button id="copyBtn" class="btn btn-ghost" type="button">复制结果</button>
+              <p class="mini">提示：演示内容为固定模板示例，正式版将根据医学知识库和AI模型动态生成。</p>
+            </form>
+          </div>
+          <div class="result article" id="result" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="tag">使用流程</div>
+          <h2>从主题到发布，尽量少操作</h2>
+        </div>
+        <div class="flow">
+          <div class="flow-step"><b>01 输入主题</b><p>填写疾病名称，如TTP、高血压、糖尿病。</p></div>
+          <div class="flow-step"><b>02 设置参数</b><p>选择字数、格式、是否需要图文结合。</p></div>
+          <div class="flow-step"><b>03 一键生成</b><p>自动输出五大医学模块完整科普文章。</p></div>
+          <div class="flow-step"><b>04 预览微调</b><p>按科室语气和医院规范做少量修改。</p></div>
+          <div class="flow-step"><b>05 复制发布</b><p>直接复制到公众号后台，完成排版发布。</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="compliance" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="tag">合规与风险控制</div>
+          <h2>医疗科普可以辅助生成，但必须保持谨慎边界</h2>
+          <p class="lead">产品定位为医院公众号健康科普辅助工具，不替代医生诊断与治疗，不提供个体化诊疗方案。</p>
+        </div>
+        <div class="risk">
+          <div class="risk-row"><div>法律风险</div><div><p>避免诊疗建议、疗效承诺、替代就医。</p></div><div><p>固定免责声明；禁用“治愈、根治、百分百有效”等绝对化表述；只做通用健康科普。</p></div></div>
+          <div class="risk-row"><div>平台风险</div><div><p>公众号可能审核医疗营销或虚假科普内容。</p></div><div><p>纯公益科普，不引导消费，不推广药品、器械或商业服务。</p></div></div>
+          <div class="risk-row"><div>数据风险</div><div><p>用户可能输入患者隐私信息。</p></div><div><p>明确禁止上传个人病历、身份信息和敏感医疗数据；正式版可配置不存储策略。</p></div></div>
+          <div class="risk-row"><div>误用风险</div><div><p>读者将科普文章当作个人诊疗依据。</p></div><div><p>头部与尾部固定提示：内容仅供参考，身体不适请及时就医，具体诊疗遵医嘱。</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="tag">商业化包装</div>
+          <h2>适合医院科室、宣传科和基层卫生公众号采购</h2>
+        </div>
+        <div class="grid-3 pricing">
+          <div class="card price-card">
+            <span class="badge">体验版</span>
+            <h3>免费试用</h3>
+            <div class="price">¥0 <small>/ 3次生成</small></div>
+            <ul class="features">
+              <li>基础疾病主题生成</li>
+              <li>公众号图文格式</li>
+              <li>固定合规免责声明</li>
+              <li>适合购买前体验</li>
+            </ul>
+          </div>
+          <div class="card price-card featured">
+            <span class="badge">推荐</span>
+            <h3>科室版</h3>
+            <div class="price">¥199 <small>/ 月</small></div>
+            <ul class="features">
+              <li>每日稳定生成科普文章</li>
+              <li>支持字数与格式自定义</li>
+              <li>图文配图建议</li>
+              <li>内容复制与二次编辑</li>
+              <li>参数调试与使用指导</li>
+            </ul>
+          </div>
+          <div class="card price-card">
+            <span class="badge">机构版</span>
+            <h3>医院/宣传科</h3>
+            <div class="price">定制 <small>/ 年度</small></div>
+            <ul class="features">
+              <li>多账号权限管理</li>
+              <li>医院落款与模板配置</li>
+              <li>专科知识库更新</li>
+              <li>批量生成与定时选题</li>
+              <li>合规词库与审核规则</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <section class="cta">
+        <div>
+          <h2>让医护公众号科普，从“每天赶稿”变成“标准化生成”。</h2>
+          <p>输入主题词、字数、输出格式和图文结合设置，即可获得结构完整、专业通俗、适配公众号发布的健康科普初稿。</p>
+        </div>
+        <a class="btn" href="#demo">开始试生成</a>
+      </section>
+    </div>
   </main>
 
-  <script src="app.js"></script>
+  <footer>
+    <div class="container footer-grid">
+      <div>
+        <div class="logo"><span class="logo-mark">医</span><span>医护科普AI</span></div>
+        <p class="mini">医院公众号疾病科普AI图文生成工具 · 纯公益科普辅助生产</p>
+      </div>
+      <p class="mini">本文案与演示仅用于产品展示。正式上线前建议增加医学专家审核、隐私政策、用户协议和内容审核机制。</p>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('generatorForm');
+    const result = document.getElementById('result');
+    const copyBtn = document.getElementById('copyBtn');
+
+    function imageTip(text) {
+      return `<div class="image-tip">配图建议：${text}</div>`;
+    }
+
+    function renderArticle() {
+      const topic = document.getElementById('topic').value.trim() || 'TTP';
+      const words = document.getElementById('words').value;
+      const format = document.getElementById('format').value;
+      const withImage = document.getElementById('withImage').checked;
+      const fullName = topic.toUpperCase() === 'TTP' ? 'TTP（血栓性血小板减少性紫癜）' : topic;
+
+      result.innerHTML = `
+        <h2>${fullName}：身体发出的危险信号，别忽视</h2>
+        <p><strong>生成设置：</strong>${words}｜${format}｜${withImage ? '图文结合' : '纯文字'}</p>
+        <p>本文面向关注自身健康的普通读者，用通俗语言介绍${fullName}的基础知识、常见表现、检查方式、治疗原则和就医提醒，帮助大家提高识别意识。</p>
+
+        <h3>一、疾病基础认知</h3>
+        ${withImage ? imageTip('医院走廊中医护人员向居民讲解血液健康知识，画面清爽、专业、无商业元素。') : ''}
+        <p>${fullName}是一类与血液凝血和微血管异常相关的疾病。以TTP为例，它常与血小板明显减少、微血管内血栓形成及多个器官受影响有关。该病总体并不常见，但起病可能较急，若识别和处理不及时，可能对神经系统、肾脏、心脏等重要器官造成影响。</p>
+        <p>了解这类疾病的意义在于：一些早期表现看似只是乏力、皮肤瘀点或发热，但背后可能提示血液系统正在发生异常。及时就医检查，有助于尽早明确原因，避免病情进一步发展。</p>
+
+        <h3>二、疾病临床表现</h3>
+        ${withImage ? imageTip('简洁医学插画：皮肤瘀点、乏力、发热、头痛等症状图标组合，适合公众号分段配图。') : ''}
+        <p>患者可能出现不明原因乏力、面色苍白、皮肤或黏膜出血点、瘀斑、鼻出血、牙龈出血等表现。有些人会伴随发热、头痛、意识模糊、说话不清、肢体无力等神经系统相关症状。少数患者还可能出现尿色加深、尿量变化、胸闷或心慌等情况。</p>
+        <p>需要注意的是，疾病表现并不一定一次性全部出现。早期症状可能分散且不典型，普通人很难仅凭感觉判断，因此一旦出现多个异常信号叠加，尤其是出血表现合并明显乏力、发热或神经系统异常，应尽快到医院评估。</p>
+
+        <h3>三、实验室诊断标准</h3>
+        ${withImage ? imageTip('实验室检验场景：血液样本、显微镜、检验报告单，突出“规范检查、明确诊断”。') : ''}
+        <p>医院通常会结合血常规、血小板计数、贫血相关指标、溶血指标、肝肾功能、凝血功能及外周血涂片等检查进行综合判断。对于疑似TTP的患者，医生还可能根据情况评估ADAMTS13活性等相关指标。</p>
+        <p>这些检查的目的，是判断是否存在血小板减少、红细胞破坏、重要脏器受累以及其他可能导致类似症状的疾病。诊断并不是看单一指标，而是结合症状、体征和实验室结果综合分析。</p>
+
+        <h3>四、治疗原则及疾病转归</h3>
+        ${withImage ? imageTip('规范治疗主题插画：医生团队查看病情资料，强调“早识别、早评估、规范治疗”。') : ''}
+        <p>治疗原则强调及时识别、尽快评估、规范处理。医生会根据患者病情严重程度、检查结果和器官受累情况制定治疗方案。治疗过程中通常需要严密监测血小板、贫血、溶血和脏器功能变化，并根据病情调整处理策略。</p>
+        <p>疾病转归与发现时间、病情严重程度、是否合并重要器官受累、治疗反应和基础健康状况等因素有关。多数患者在规范治疗和持续随访下可以获得改善，但仍需重视复查和长期管理，避免自行停药或忽视复发信号。</p>
+
+        <h3>五、总结与就医警示</h3>
+        ${withImage ? imageTip('醒目的健康提醒海报：出现出血点、明显乏力、发热、头痛意识异常时及时就医。') : ''}
+        <p>${fullName}虽然不是大众最熟悉的疾病，但一旦发生，可能进展较快。普通人需要重点记住：不明原因皮肤瘀点或瘀斑、牙龈或鼻腔反复出血、明显乏力和面色苍白、发热伴头痛、意识模糊、说话含糊、肢体无力、尿色异常等，都不应简单归因于“太累”或“小问题”。</p>
+        <p><strong>如果上述症状持续存在，或多个信号同时出现，请及时前往正规医院就诊，由专业医生结合检查结果判断原因，避免延误病情。</strong></p>
+        <div class="disclaimer">免责声明：本文为健康科普知识普及，仅作参考，不替代专业医师诊断与治疗，身体不适请及时就医。</div>
+      `;
+    }
+
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      renderArticle();
+    });
+
+    copyBtn.addEventListener('click', async () => {
+      const text = result.innerText.trim();
+      if (!text) return;
+      await navigator.clipboard.writeText(text);
+      copyBtn.textContent = '已复制 ✓';
+      setTimeout(() => copyBtn.textContent = '复制结果', 1600);
+    });
+
+    renderArticle();
+  </script>
 </body>
 </html>

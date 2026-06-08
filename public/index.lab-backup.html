@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>检验科普内容工作台</title>
+  <meta name="description" content="面向医院检验科和医疗公众号编辑的公众号、小红书双平台健康科普生成工具。" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#hero" aria-label="回到首页">
+      <span class="brand-mark">检</span>
+      <span>
+        <strong>Lab Content Studio</strong>
+        <em>检验科普内容工作台</em>
+      </span>
+    </a>
+    <nav class="nav-links" aria-label="页面导航">
+      <a href="#story">流程</a>
+      <a href="#workspace">工作台</a>
+      <a href="#principles">原则</a>
+    </nav>
+    <div id="userBox" class="user-box"></div>
+  </header>
+
+  <main>
+    <section id="hero" class="hero reveal">
+      <div class="hero-copy">
+        <p class="eyebrow">Hospital Lab Content Tool</p>
+        <h1>把检验项目，写成患者看得懂的公众号和小红书科普。</h1>
+        <p class="lead">面向医院检验科、宣传科和医疗公众号编辑，围绕血常规、肝功能、肿瘤标志物、检查前注意事项、报告常见误区等主题，生成公众号长文与小红书笔记提示词。</p>
+        <div class="hero-actions">
+          <a class="button" href="#workspace">开始生成科普内容</a>
+          <a class="button secondary" href="#story">查看内容流程</a>
+        </div>
+        <div class="hero-proof">
+          <span>公众号长文</span>
+          <span>小红书笔记</span>
+          <span>合规风险提醒</span>
+        </div>
+      </div>
+      <div class="hero-visual" aria-label="检验科普内容流程卡片">
+        <div class="glass-card floating-card card-a">
+          <span>01</span>
+          <strong>讲清项目</strong>
+          <p>解释检查目的、适用人群和普通人最关心的问题。</p>
+        </div>
+        <div class="glass-card floating-card card-b">
+          <span>02</span>
+          <strong>适配平台</strong>
+          <p>公众号偏完整，小红书偏场景化、短句化和卡片化。</p>
+        </div>
+        <div class="glass-card floating-card card-c">
+          <span>03</span>
+          <strong>守住边界</strong>
+          <p>异常不等于确诊，内容不替代医生诊断和报告解读。</p>
+        </div>
+        <div class="pulse-orb"></div>
+      </div>
+    </section>
+
+    <section id="story" class="story-section reveal">
+      <div class="section-heading">
+        <p class="eyebrow">Content Workflow</p>
+        <h2>检验科普要先降低焦虑，再帮助患者理解检查价值。</h2>
+      </div>
+      <div class="story-steps">
+        <article class="story-step">
+          <span class="step-index">1</span>
+          <h3>先回答为什么查</h3>
+          <p>说明检验项目的用途、适用场景，以及检查前要注意什么。</p>
+        </article>
+        <article class="story-step">
+          <span class="step-index">2</span>
+          <h3>再解释怎么看</h3>
+          <p>用通俗语言解释常见指标和误区，避免把异常直接等同于疾病。</p>
+        </article>
+        <article class="story-step">
+          <span class="step-index">3</span>
+          <h3>最后提示怎么做</h3>
+          <p>引导复查、咨询医生或结合临床判断，不做诊断和治疗承诺。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="workspace" class="workspace reveal">
+      <section id="auth" class="card auth-card">
+        <div>
+          <p class="eyebrow">Secure Drafts</p>
+          <h2>登录 / 注册</h2>
+          <p>账号与内容草稿保存在 SQLite 数据库中，适合医院检验科或医疗公众号编辑内部使用。</p>
+        </div>
+        <div class="grid two">
+          <label>用户名<input id="username" autocomplete="username" placeholder="例如 lab_editor" /></label>
+          <label>密码<input id="password" type="password" autocomplete="current-password" placeholder="至少 6 位" /></label>
+        </div>
+        <div class="actions">
+          <button onclick="login()">登录</button>
+          <button class="secondary" onclick="register()">注册</button>
+        </div>
+        <p class="hint">建议使用专门的本地密码，不要复用邮箱、微信或 GitHub 密码。</p>
+      </section>
+
+      <section id="app" class="hidden">
+        <div class="layout">
+          <aside class="card article-panel">
+            <div class="side-title">
+              <div>
+                <p class="eyebrow">Draft Library</p>
+                <h2>内容草稿</h2>
+              </div>
+              <button onclick="newArticle()">新建</button>
+            </div>
+            <div class="quick-templates" aria-label="快速示例">
+              <button class="chip" onclick="applyExample('blood')">血常规</button>
+              <button class="chip" onclick="applyExample('tumor')">肿瘤标志物</button>
+              <button class="chip" onclick="applyExample('fasting')">抽血空腹</button>
+            </div>
+            <div id="articleList" class="list"></div>
+          </aside>
+
+          <section class="card editor">
+            <div class="editor-head">
+              <div>
+                <p class="eyebrow">Lab Content Blueprint</p>
+                <h2>检验科普内容输入</h2>
+              </div>
+              <span class="status-pill">公众号 + 小红书</span>
+            </div>
+            <input type="hidden" id="articleId" />
+            <div class="grid two">
+              <label>内容标题<input id="title" placeholder="例如：血常规报告里的箭头，到底代表什么？" /></label>
+              <label>检验项目 / 科普主题<input id="disease" placeholder="例如：血常规 / 肿瘤标志物 / 抽血前空腹" /></label>
+              <label>发布平台<input id="platform" value="医院公众号 + 小红书" /></label>
+              <label>目标字数<input id="word_count" type="number" min="800" max="5000" value="1800" /></label>
+            </div>
+            <label>面向人群 / 使用场景<textarea id="audience" placeholder="例如：关注医院公众号的患者、体检人群、普通健康关注者；希望看懂检查目的和注意事项。"></textarea></label>
+
+            <div class="template-note">
+              <span>默认输出</span>
+              <strong>公众号长文 + 小红书笔记 + 标题建议 + 配图建议 + 合规风险提醒</strong>
+              <p>重点说明检验项目用途、检查前注意事项、报告常见误区和就医提醒；不直接诊断、不解读个人报告、不夸大检测作用。</p>
+            </div>
+
+            <div class="grid two section-grid">
+              <label><span>1. 项目用途 / 为什么要查</span><textarea id="section1" placeholder="这个检验项目主要看什么？常用于哪些场景？适合哪些人了解？"></textarea></label>
+              <label><span>2. 检查前注意事项</span><textarea id="section2" placeholder="是否需要空腹？能不能喝水？样本怎么留？采血后怎么按压？"></textarea></label>
+              <label><span>3. 报告指标 / 常见异常</span><textarea id="section3" placeholder="常见指标、↑↓箭头、阳性/阴性、加号等怎么通俗解释？"></textarea></label>
+              <label><span>4. 常见误区 / 风险边界</span><textarea id="section4" placeholder="例如：异常不等于确诊、肿瘤标志物升高不一定是癌、不能自行用药。"></textarea></label>
+            </div>
+            <label>结尾提醒 / 行动建议<textarea id="summary" placeholder="例如：报告异常建议结合症状、病史和医生判断；必要时复查或到对应专科就诊。"></textarea></label>
+            <label>配图建议 / 科室补充要点<textarea id="image_notes" placeholder="例如：检验流程图、报告箭头示意图、抽血前注意事项卡片、检验科窗口照片。"></textarea></label>
+
+            <div class="quality-card">
+              <strong>发布前检查</strong>
+              <ul>
+                <li>是否避免把检验异常直接写成疾病诊断？</li>
+                <li>是否避免“精准诊断、一定、必查、早筛所有疾病”等夸大表达？</li>
+                <li>是否提醒发布前由检验科专业人员或医院审核？</li>
+              </ul>
+            </div>
+
+            <div class="actions sticky-actions">
+              <button onclick="saveArticle()">保存草稿</button>
+              <button class="secondary" onclick="copyPrompt()">生成并复制双平台提示词</button>
+              <button class="ghost" onclick="downloadPrompt()">下载提示词</button>
+              <button class="danger" onclick="deleteArticle()">删除</button>
+            </div>
+            <pre id="promptBox" class="prompt hidden"></pre>
+          </section>
+        </div>
+      </section>
+    </section>
+
+    <section id="principles" class="principles reveal">
+      <article>
+        <span>Readable</span>
+        <h3>患者看得懂</h3>
+        <p>把检验项目、指标和注意事项转成普通人能理解的语言。</p>
+      </article>
+      <article>
+        <span>Dual Platform</span>
+        <h3>双平台适配</h3>
+        <p>公众号负责完整解释，小红书负责场景化、卡片化、轻科普表达。</p>
+      </article>
+      <article>
+        <span>Safe Boundary</span>
+        <h3>风险可控</h3>
+        <p>不替代诊断，不解读个人报告，不承诺检测结果和平台效果。</p>
+      </article>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
