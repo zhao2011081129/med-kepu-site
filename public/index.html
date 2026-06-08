@@ -241,7 +241,7 @@
     .features li::before { content: "✓"; color: var(--brand); font-weight: 900; margin-right: 8px; }
 
     .risk { background: #fff; border: 1px solid var(--line); border-radius: 24px; overflow: hidden; }
-    .risk-row { display: grid; grid-template-columns: 180px 1fr 1.2fr; gap: 0; border-bottom: 1px solid var(--line); }
+    .risk-row { display: grid; grid-template-columns: 1fr 1.2fr; gap: 0; border-bottom: 1px solid var(--line); }
     .risk-row:last-child { border-bottom: 0; }
     .risk-row > div { padding: 18px; }
     .risk-row > div:first-child { background: var(--brand-soft); font-weight: 800; color: var(--brand-dark); }
@@ -454,14 +454,13 @@
       <div class="container">
         <div class="section-head">
           <div class="tag">合规与风险控制</div>
-          <h2>医疗科普可以辅助生成，但必须保持谨慎边界</h2>
           <p class="lead">产品定位为医院公众号健康科普辅助工具，不替代医生诊断与治疗，不提供个体化诊疗方案。</p>
         </div>
         <div class="risk">
-          <div class="risk-row"><div>法律风险</div><div><p>避免诊疗建议、疗效承诺、替代就医。</p></div><div><p>固定免责声明；禁用“治愈、根治、百分百有效”等绝对化表述；只做通用健康科普。</p></div></div>
-          <div class="risk-row"><div>平台风险</div><div><p>公众号可能审核医疗营销或虚假科普内容。</p></div><div><p>纯公益科普，不引导消费，不推广药品、器械或商业服务。</p></div></div>
-          <div class="risk-row"><div>数据风险</div><div><p>用户可能输入患者隐私信息。</p></div><div><p>明确禁止上传个人病历、身份信息和敏感医疗数据；正式版可配置不存储策略。</p></div></div>
-          <div class="risk-row"><div>误用风险</div><div><p>读者将科普文章当作个人诊疗依据。</p></div><div><p>头部与尾部固定提示：内容仅供参考，身体不适请及时就医，具体诊疗遵医嘱。</p></div></div>
+          <div class="risk-row"><div><p>避免诊疗建议、疗效承诺、替代就医。</p></div><div><p>固定免责声明；禁用“治愈、根治、百分百有效”等绝对化表述；只做通用健康科普。</p></div></div>
+          <div class="risk-row"><div><p>公众号可能审核医疗营销或虚假科普内容。</p></div><div><p>纯公益科普，不引导消费，不推广药品、器械或商业服务。</p></div></div>
+          <div class="risk-row"><div><p>用户可能输入患者隐私信息。</p></div><div><p>明确禁止上传个人病历、身份信息和敏感医疗数据；正式版可配置不存储策略。</p></div></div>
+          <div class="risk-row"><div><p>读者将科普文章当作个人诊疗依据。</p></div><div><p>头部与尾部固定提示：内容仅供参考，身体不适请及时就医，具体诊疗遵医嘱。</p></div></div>
         </div>
       </div>
     </section>
@@ -470,13 +469,10 @@
       <div class="container">
         <div class="section-head">
           <div class="tag">商业化包装</div>
-          <h2>适合医院科室、宣传科和基层卫生公众号采购</h2>
         </div>
         <div class="grid-3 pricing">
           <div class="card price-card">
             <span class="badge">体验版</span>
-            <h3>免费试用</h3>
-            <div class="price">¥0 <small>/ 3次生成</small></div>
             <ul class="features">
               <li>基础疾病主题生成</li>
               <li>公众号图文格式</li>
@@ -486,8 +482,6 @@
           </div>
           <div class="card price-card featured">
             <span class="badge">推荐</span>
-            <h3>科室版</h3>
-            <div class="price">¥199 <small>/ 月</small></div>
             <ul class="features">
               <li>每日稳定生成科普文章</li>
               <li>支持字数与格式自定义</li>
@@ -498,8 +492,6 @@
           </div>
           <div class="card price-card">
             <span class="badge">机构版</span>
-            <h3>医院/宣传科</h3>
-            <div class="price">定制 <small>/ 年度</small></div>
             <ul class="features">
               <li>多账号权限管理</li>
               <li>医院落款与模板配置</li>
@@ -515,7 +507,6 @@
     <div class="container">
       <section class="cta">
         <div>
-          <h2>让医护公众号科普，从“每天赶稿”变成“标准化生成”。</h2>
           <p>输入主题词、字数、输出格式和图文结合设置，即可获得结构完整、专业通俗、适配公众号发布的健康科普初稿。</p>
         </div>
         <a class="btn" href="#demo">开始试生成</a>
