@@ -226,6 +226,19 @@
     .image-tip { margin: 12px 0; padding: 12px 14px; border-radius: 16px; background: var(--blue-soft); color: #284f9f; font-size: 14px; }
     .disclaimer { margin-top: 20px; padding: 14px; background: var(--red-soft); border: 1px solid #ffd6d1; border-radius: 16px; color: #8a3a31; font-size: 14px; }
 
+    .triage-shell { display: grid; grid-template-columns: 420px 1fr; gap: 20px; align-items: start; }
+    .triage-form { display: grid; gap: 14px; }
+    .triage-form textarea { min-height: 126px; resize: vertical; }
+    .quick-symptoms { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { border: 1px solid var(--line); background: #fff; color: var(--muted); border-radius: 999px; padding: 7px 10px; cursor: pointer; font-size: 13px; }
+    .chip:hover { color: var(--brand-dark); border-color: rgba(29,143,135,.45); background: var(--brand-soft); }
+    .triage-result { min-height: 520px; }
+    .triage-card { border: 1px solid var(--line); border-radius: 20px; padding: 18px; background: #fff; margin-bottom: 14px; }
+    .triage-card h3 { margin: 0 0 8px; color: var(--brand-dark); font-size: 20px; }
+    .triage-card ul { margin: 8px 0 0; padding-left: 20px; color: #344154; }
+    .triage-alert { background: var(--red-soft); border-color: #ffd6d1; color: #8a3a31; }
+    .triage-muted { color: var(--muted); }
+
     .flow { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
     .flow-step { position: relative; background: white; border: 1px solid var(--line); border-radius: 20px; padding: 18px; min-height: 128px; }
     .flow-step b { display: block; color: var(--brand-dark); margin-bottom: 6px; }
@@ -270,7 +283,7 @@
     .mini { font-size: 13px; color: var(--muted); }
 
     @media (max-width: 980px) {
-      .hero-grid, .generator { grid-template-columns: 1fr; }
+      .hero-grid, .generator, .triage-shell { grid-template-columns: 1fr; }
       .grid-3, .grid-2, .flow { grid-template-columns: 1fr 1fr; }
       .risk-row { grid-template-columns: 1fr; }
       .nav-links { display: none; }
@@ -296,10 +309,11 @@
         <a href="#pain">解决痛点</a>
         <a href="#modules">内容模块</a>
         <a href="#demo">生成演示</a>
+        <a href="#triage">智能导诊</a>
         <a href="#compliance">合规保障</a>
         <a href="#pricing">开通方案</a>
       </div>
-      <a class="btn btn-primary" href="#demo">免费试生成</a>
+      <a class="btn btn-primary" href="#triage">体验导诊</a>
     </div>
   </nav>
 
@@ -313,6 +327,7 @@
           <div class="hero-actions">
             <a class="btn btn-primary" href="#demo">立即体验生成器</a>
             <a class="btn btn-secondary" href="#modules">查看五大医学结构</a>
+            <a class="btn btn-ghost" href="#triage">体验AI智能导诊</a>
           </div>
           <div class="hero-proof">
             <span class="pill">五大固定医学模块</span>
@@ -435,6 +450,61 @@
       </div>
     </section>
 
+    <section id="triage" class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="tag">AI智能导诊机器人</div>
+          <h2>输入不适症状，先帮用户判断应该挂哪个科室</h2>
+          <p class="lead">面向医院公众号和线上入口的导诊演示版。机器人只做就诊方向提示，不做诊断、不开药、不替代医生面诊。</p>
+        </div>
+        <div class="triage-shell">
+          <div class="card">
+            <div class="panel-title"><h3>导诊信息</h3><span class="badge">Demo</span></div>
+            <form id="triageForm" class="triage-form">
+              <div>
+                <label for="symptoms">请描述主要症状</label>
+                <textarea id="symptoms" placeholder="例如：发热三天、咳嗽、胸闷；或头痛、恶心、说话不清"></textarea>
+              </div>
+              <div class="two">
+                <div>
+                  <label for="ageGroup">年龄段</label>
+                  <select id="ageGroup">
+                    <option>成人</option>
+                    <option>儿童</option>
+                    <option>老人</option>
+                    <option>孕产妇</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="duration">持续时间</label>
+                  <select id="duration">
+                    <option>刚刚出现</option>
+                    <option>1天内</option>
+                    <option selected>2-3天</option>
+                    <option>超过1周</option>
+                    <option>反复发作</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label>快速症状</label>
+                <div class="quick-symptoms">
+                  <button class="chip" type="button" data-symptom="发热 咳嗽 咽痛">发热咳嗽</button>
+                  <button class="chip" type="button" data-symptom="腹痛 腹泻 呕吐">腹痛腹泻</button>
+                  <button class="chip" type="button" data-symptom="胸痛 胸闷 心慌">胸痛胸闷</button>
+                  <button class="chip" type="button" data-symptom="头痛 头晕 说话不清">头痛头晕</button>
+                  <button class="chip" type="button" data-symptom="皮疹 瘙痒 红肿">皮疹瘙痒</button>
+                </div>
+              </div>
+              <button class="btn btn-primary" type="submit">开始智能导诊</button>
+              <p class="mini">如出现胸痛、呼吸困难、意识障碍、大出血、肢体无力等急症信号，请优先拨打120或前往急诊。</p>
+            </form>
+          </div>
+          <div class="result triage-result" id="triageResult" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
     <section class="section">
       <div class="container">
         <div class="section-head">
@@ -528,6 +598,46 @@
     const form = document.getElementById('generatorForm');
     const result = document.getElementById('result');
     const copyBtn = document.getElementById('copyBtn');
+    const triageForm = document.getElementById('triageForm');
+    const triageResult = document.getElementById('triageResult');
+
+    const triageRules = [
+      { keys: ['胸痛','胸闷','心慌','心绞痛'], dept: '急诊科 / 心血管内科', reason: '胸痛、胸闷或明显心慌需要优先排除心肺相关急症。', prepare: ['尽量避免自行开车就医', '带上既往心电图、用药清单和检查报告', '如伴大汗、濒死感、呼吸困难，请立即拨打120'] },
+      { keys: ['呼吸困难','喘不上气','气短','窒息'], dept: '急诊科 / 呼吸与危重症医学科', reason: '呼吸困难属于需要优先评估的症状，需判断是否存在缺氧、感染或哮喘等情况。', prepare: ['记录血氧、体温和发作时间', '哮喘或慢阻肺患者带上平时用药', '症状明显时不要等待线上回复'] },
+      { keys: ['说话不清','肢体无力','口角歪斜','意识不清','抽搐'], dept: '急诊科 / 神经内科', reason: '语言异常、单侧肢体无力、意识改变等需要警惕脑卒中或神经系统急症。', prepare: ['记录最后一次正常时间', '不要自行服用不确定药物', '立即前往有卒中救治能力的医院'] },
+      { keys: ['发热','咳嗽','咽痛','流鼻涕','鼻塞'], dept: '呼吸内科 / 发热门诊', reason: '发热、咳嗽、咽痛多见于呼吸道感染相关问题，需结合体温和持续时间判断。', prepare: ['记录最高体温和退烧药使用情况', '就诊时佩戴口罩', '如高热不退或气促，优先急诊'] },
+      { keys: ['腹痛','腹泻','呕吐','恶心','胃痛'], dept: '消化内科 / 急诊科', reason: '腹痛、腹泻、呕吐可能与胃肠炎、胆胰疾病等有关，剧烈腹痛需急诊排查。', prepare: ['记录疼痛部位、次数和是否发热', '避免自行大量服用止痛药掩盖病情', '带上近期饮食和用药信息'] },
+      { keys: ['尿频','尿急','尿痛','血尿','腰痛'], dept: '泌尿外科 / 肾内科', reason: '尿路刺激症状、血尿或腰痛需要评估泌尿系统感染、结石或肾脏相关问题。', prepare: ['就诊前可保留尿检样本条件', '记录饮水、排尿和疼痛情况', '血尿明显或发热寒战时及时急诊'] },
+      { keys: ['皮疹','瘙痒','红肿','过敏','荨麻疹'], dept: '皮肤科 / 过敏反应明显时急诊', reason: '皮疹和瘙痒常见于皮肤病或过敏反应，若伴呼吸困难或喉头紧缩需急诊。', prepare: ['回忆近期食物、药物、接触物', '不要反复抓挠或乱涂刺激性药物', '拍照记录皮疹变化'] },
+      { keys: ['牙痛','牙龈','口腔溃疡','拔牙'], dept: '口腔科', reason: '牙痛、牙龈肿痛和口腔局部问题通常优先选择口腔科。', prepare: ['说明疼痛位置和冷热刺激反应', '带上既往牙片或治疗记录', '面部明显肿胀或发热时及时就医'] },
+      { keys: ['眼痛','视力下降','眼红','看不清'], dept: '眼科 / 急诊眼科', reason: '眼痛、视力突然下降或眼外伤需要尽快眼科评估。', prepare: ['不要揉眼或自行滴不明眼药水', '隐形眼镜使用者先停止佩戴', '突发视力下降请尽快急诊'] },
+      { keys: ['耳痛','耳鸣','听力下降','鼻出血','喉咙异物'], dept: '耳鼻喉科', reason: '耳、鼻、咽喉相关症状通常优先到耳鼻喉科评估。', prepare: ['记录症状出现时间和诱因', '鼻出血时先正确压迫止血', '异物卡喉或呼吸受影响请急诊'] }
+    ];
+
+    function escapeHtml(text) {
+      return String(text).replace(/[&<>"']/g, char => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[char]));
+    }
+
+    function renderTriage() {
+      const symptoms = document.getElementById('symptoms').value.trim();
+      const ageGroup = document.getElementById('ageGroup').value;
+      const duration = document.getElementById('duration').value;
+      const text = symptoms || '发热 咳嗽 咽痛';
+      const matched = triageRules.find(rule => rule.keys.some(key => text.includes(key))) || {
+        dept: '全科医学科 / 普通内科',
+        reason: '当前描述较笼统，建议先由全科或普通内科进行初步评估，再按检查结果转至专科。',
+        prepare: ['补充症状部位、持续时间、诱因和既往病史', '带上近期检查报告和正在使用的药物', '症状加重或出现急症信号时及时急诊']
+      };
+      const urgentWords = ['胸痛','呼吸困难','意识不清','说话不清','肢体无力','大出血','抽搐','剧烈腹痛','视力下降'];
+      const urgent = urgentWords.some(word => text.includes(word)) || ageGroup === '孕产妇';
+      const prepareItems = matched.prepare.map(item => '<li>' + escapeHtml(item) + '</li>').join('');
+      triageResult.innerHTML =
+        (urgent ? '<div class="triage-card triage-alert"><h3>优先安全提醒</h3><p>描述中可能包含急症或特殊人群信号。若症状明显、持续加重或伴随意识异常、呼吸困难、胸痛、大出血等情况，请优先拨打120或前往急诊。</p></div>' : '') +
+        '<div class="triage-card"><h3>建议优先科室：' + escapeHtml(matched.dept) + '</h3><p class="triage-muted">根据症状描述：' + escapeHtml(text) + '｜' + escapeHtml(ageGroup) + '｜' + escapeHtml(duration) + '</p><p>' + escapeHtml(matched.reason) + '</p></div>' +
+        '<div class="triage-card"><h3>就诊前准备</h3><ul>' + prepareItems + '</ul></div>' +
+        '<div class="triage-card"><h3>建议补充询问</h3><ul><li>症状从什么时候开始？是否越来越重？</li><li>有没有发热、疼痛部位、出血、呼吸困难或意识改变？</li><li>既往有什么基础病、过敏史、近期用药或检查结果？</li></ul></div>' +
+        '<div class="disclaimer">导诊结果仅用于就医方向参考，不构成诊断、治疗或用药建议。最终挂号科室和处理方案请以医院分诊台及医生判断为准。</div>';
+    }
 
     function imageTip(text) {
       return `<div class="image-tip">配图建议：${text}</div>`;
@@ -586,7 +696,20 @@
       setTimeout(() => copyBtn.textContent = '复制结果', 1600);
     });
 
+    document.querySelectorAll('[data-symptom]').forEach(button => {
+      button.addEventListener('click', () => {
+        document.getElementById('symptoms').value = button.dataset.symptom;
+        renderTriage();
+      });
+    });
+
+    triageForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      renderTriage();
+    });
+
     renderArticle();
+    renderTriage();
   </script>
 </body>
 </html>
